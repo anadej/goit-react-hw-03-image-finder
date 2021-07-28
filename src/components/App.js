@@ -7,11 +7,6 @@ import SearchForm from "./searchbar/SearchForm";
 import Loader from "react-loader-spinner";
 import Modal from "./modal/Modal";
 
-const getImagesFromApi = async (searchbar, page) => {
-  const res = await getImagesOnSearch(searchbar, page);
-  return res.data.hits;
-};
-
 class App extends Component {
   state = {
     images: [],
@@ -28,27 +23,9 @@ class App extends Component {
     });
   };
 
-  // onSearchSubmit = async (searchbar) => {
-  //   this.setState({ isLoading: true });
-  //   const images = await getImagesFromApi(searchbar);
-
-  //   setTimeout(() => {
-  //     this.setState({
-  //       images: [...images],
-  //       searchbar: searchbar,
-  //       page: 2,
-  //       isLoading: false,
-  //     });
-  //     window.scrollTo({
-  //       top: document.documentElement.scrollHeight,
-  //       behavior: "smooth",
-  //     });
-  //   }, 1000);
-  // };
-
   onSearchSubmit = (searchbar) => {
     this.setState({ isLoading: true });
-    getImagesFromApi(searchbar)
+    getImagesOnSearch(searchbar)
       .then((images) => {
         this.setState({
           images: [...images],
@@ -66,28 +43,9 @@ class App extends Component {
       });
   };
 
-  // onLoadMore = async () => {
-  //   this.setState({ isLoadingMore: true });
-  //   const images = await getImagesFromApi(
-  //     this.state.searchbar,
-  //     this.state.page
-  //   );
-  //   setTimeout(() => {
-  //     this.setState((prev) => ({
-  //       images: [...prev.images, ...images],
-  //       page: prev.page + 1,
-  //       isLoadingMore: false,
-  //     }));
-  //     window.scrollTo({
-  //       top: document.documentElement.scrollHeight,
-  //       behavior: "smooth",
-  //     });
-  //   }, 1000);
-  // };
-
   onLoadMore = () => {
     this.setState({ isLoadingMore: true });
-    getImagesFromApi(this.state.searchbar, this.state.page)
+    getImagesOnSearch(this.state.searchbar, this.state.page)
       .then((images) => {
         this.setState((prev) => ({
           images: [...prev.images, ...images],

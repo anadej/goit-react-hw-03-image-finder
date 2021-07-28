@@ -6,15 +6,19 @@ const base_URL =
 export const getImagesOnSearch = async (searchbar, page = 1) => {
   try {
     if (searchbar) {
-      return await axios.get(
-        base_URL +
-          `&q=${searchbar}&page=${page}&image_type=photo&orientation=horizontal&per_page=12`
-      );
+      return await axios
+        .get(
+          base_URL +
+            `&q=${searchbar}&page=${page}&image_type=photo&orientation=horizontal&per_page=12`
+        )
+        .then((response) => response.data.hits);
     }
-    return await axios.get(
-      base_URL +
-        `&page=${page}&image_type=photo&orientation=horizontal&per_page=12`
-    );
+    return await axios
+      .get(
+        base_URL +
+          `&page=${page}&image_type=photo&orientation=horizontal&per_page=12`
+      )
+      .then((response) => response.data.hits);
   } catch (error) {
     console.log(`error`, error);
   }
