@@ -24,7 +24,7 @@ class App extends Component {
   };
 
   onSearchSubmit = (searchbar) => {
-    this.setState({ isLoading: true });
+    this.setState({ images: [], isLoading: true });
     getImagesOnSearch(searchbar)
       .then((images) => {
         this.setState({
