@@ -22,11 +22,11 @@ class App extends Component {
     modalImageURL: "",
   };
 
-  handleOpenModal = (largeImageURL = "") => {
-    this.setState({
-      modalImageURL: largeImageURL,
-    });
-  };
+  // handleOpenModal = (largeImageURL = "") => {
+  //   this.setState({
+  //     modalImageURL: largeImageURL,
+  //   });
+  // };
 
   toggleModal = (largeImageURL = "") => {
     // this.setState(({ showModal }) => ({ showModal: !showModal }));
@@ -87,7 +87,7 @@ class App extends Component {
         )}
         <ImageGallery
           images={this.state.images}
-          handleOpenModal={this.handleOpenModal}
+          toggleModal={this.toggleModal}
         />
 
         {isLoadingMore && (

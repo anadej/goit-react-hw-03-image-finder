@@ -1,7 +1,7 @@
 import React from "react";
 import { ImageGalleryItemContainer } from "./ImageGalleryItemStyled";
 
-const ImageGalleryItem = ({ image, handleOpenModal }) => {
+const ImageGalleryItem = ({ image, toggleModal }) => {
   const { largeImageURL, webformatURL, tags } = image;
 
   return (
@@ -10,7 +10,7 @@ const ImageGalleryItem = ({ image, handleOpenModal }) => {
         src={webformatURL}
         alt={tags}
         className="ImageGalleryItem-image"
-        onClick={() => handleOpenModal(largeImageURL)}
+        onClick={() => toggleModal(largeImageURL)}
       />
     </ImageGalleryItemContainer>
   );
