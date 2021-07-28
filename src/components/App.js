@@ -22,54 +22,86 @@ class App extends Component {
     modalImageURL: "",
   };
 
-  // handleOpenModal = (largeImageURL = "") => {
-  //   this.setState({
-  //     modalImageURL: largeImageURL,
-  //   });
-  // };
-
   toggleModal = (largeImageURL = "") => {
-    // this.setState(({ showModal }) => ({ showModal: !showModal }));
     this.setState({
       modalImageURL: largeImageURL,
     });
   };
 
-  onSearchSubmit = async (searchbar) => {
-    this.setState({ isLoading: true });
-    const images = await getImagesFromApi(searchbar);
+  // onSearchSubmit = async (searchbar) => {
+  //   this.setState({ isLoading: true });
+  //   const images = await getImagesFromApi(searchbar);
 
-    setTimeout(() => {
-      this.setState({
-        images: [...images],
-        searchbar: searchbar,
-        page: 2,
-        isLoading: false,
+  //   setTimeout(() => {
+  //     this.setState({
+  //       images: [...images],
+  //       searchbar: searchbar,
+  //       page: 2,
+  //       isLoading: false,
+  //     });
+  //     window.scrollTo({
+  //       top: document.documentElement.scrollHeight,
+  //       behavior: "smooth",
+  //     });
+  //   }, 1000);
+  // };
+
+  onSearchSubmit = (searchbar) => {
+    this.setState({ isLoading: true });
+    getImagesFromApi(searchbar)
+      .then((images) => {
+        this.setState({
+          images: [...images],
+          searchbar: searchbar,
+          page: 2,
+        });
+      })
+      .catch((error) => console.log(`error`, error))
+      .finally(() => {
+        this.setState({ isLoading: false });
+        window.scrollTo({
+          top: document.documentElement.scrollHeight,
+          behavior: "smooth",
+        });
       });
-      window.scrollTo({
-        top: document.documentElement.scrollHeight,
-        behavior: "smooth",
-      });
-    }, 1000);
   };
 
-  onLoadMore = async () => {
+  // onLoadMore = async () => {
+  //   this.setState({ isLoadingMore: true });
+  //   const images = await getImagesFromApi(
+  //     this.state.searchbar,
+  //     this.state.page
+  //   );
+  //   setTimeout(() => {
+  //     this.setState((prev) => ({
+  //       images: [...prev.images, ...images],
+  //       page: prev.page + 1,
+  //       isLoadingMore: false,
+  //     }));
+  //     window.scrollTo({
+  //       top: document.documentElement.scrollHeight,
+  //       behavior: "smooth",
+  //     });
+  //   }, 1000);
+  // };
+
+  onLoadMore = () => {
     this.setState({ isLoadingMore: true });
-    const images = await getImagesFromApi(
-      this.state.searchbar,
-      this.state.page
-    );
-    setTimeout(() => {
-      this.setState((prev) => ({
-        images: [...prev.images, ...images],
-        page: prev.page + 1,
-        isLoadingMore: false,
-      }));
-      window.scrollTo({
-        top: document.documentElement.scrollHeight,
-        behavior: "smooth",
+    getImagesFromApi(this.state.searchbar, this.state.page)
+      .then((images) => {
+        this.setState((prev) => ({
+          images: [...prev.images, ...images],
+          page: prev.page + 1,
+        }));
+      })
+      .catch((error) => console.log(`error`, error))
+      .finally(() => {
+        this.setState({ isLoadingMore: false });
+        window.scrollTo({
+          top: document.documentElement.scrollHeight,
+          behavior: "smooth",
+        });
       });
-    }, 1000);
   };
 
   render() {
