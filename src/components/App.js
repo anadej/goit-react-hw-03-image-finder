@@ -19,25 +19,20 @@ class App extends Component {
     page: 1,
     isLoading: false,
     isLoadingMore: false,
-    showModal: false,
     modalImageURL: "",
   };
 
-  // updateLargeImage = (largeImageUrl) => {
-  //   this.setState({ modalImageURL: largeImageUrl });
-  // };
-
-  handleOpenModal = (largeImageURL) => {
+  handleOpenModal = (largeImageURL = "") => {
     this.setState({
       modalImageURL: largeImageURL,
-      showModal: true,
     });
   };
 
-  toggleModal = (e) => {
-    // const imageId = e.target.getAttribute("data-id");
-    // console.log(this.state.images.find((image) => image.id === imageId));
-    this.setState(({ showModal }) => ({ showModal: !showModal }));
+  toggleModal = (largeImageURL = "") => {
+    // this.setState(({ showModal }) => ({ showModal: !showModal }));
+    this.setState({
+      modalImageURL: largeImageURL,
+    });
   };
 
   onSearchSubmit = async (searchbar) => {
@@ -60,7 +55,6 @@ class App extends Component {
 
   onLoadMore = async () => {
     this.setState({ isLoadingMore: true });
-
     const images = await getImagesFromApi(
       this.state.searchbar,
       this.state.page
@@ -79,7 +73,7 @@ class App extends Component {
   };
 
   render() {
-    const { isLoading, isLoadingMore, showModal, modalImageURL } = this.state;
+    const { isLoading, isLoadingMore, modalImageURL } = this.state;
     return (
       <AppStyled>
         {!!modalImageURL && (
