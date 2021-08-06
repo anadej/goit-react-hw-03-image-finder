@@ -17,21 +17,30 @@ class App extends Component {
     modalImageURL: "",
   };
 
+  //отслеживаем изменения строки запроса или номера страницы
+  // и вызываем функцию подгрузки новых фотографий
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.page !== this.state.page && this.state.page !== 1) {
+      this.getImages();
+    }
+    if (prevState.searchbar !== this.state.searchbar) {
+      this.getImages();
+    }
+  }
+
   toggleModal = (largeImageURL = "") => {
     this.setState({
       modalImageURL: largeImageURL,
     });
   };
 
-  onSearchSubmit = (searchbar) => {
-    this.setState({ images: [], isLoading: true });
-    getImagesOnSearch(searchbar)
+  getImages = () => {
+    this.setState({ isLoading: true });
+    getImagesOnSearch(this.state.searchbar, this.state.page)
       .then((images) => {
-        this.setState({
-          images: [...images],
-          searchbar: searchbar,
-          page: 2,
-        });
+        this.setState((prev) => ({
+          images: [...prev.images, ...images],
+        }));
       })
       .catch((error) => console.log(`error`, error))
       .finally(() => {
@@ -43,24 +52,38 @@ class App extends Component {
       });
   };
 
-  onLoadMore = () => {
-    this.setState({ isLoadingMore: true });
-    getImagesOnSearch(this.state.searchbar, this.state.page)
-      .then((images) => {
-        this.setState((prev) => ({
-          images: [...prev.images, ...images],
-          page: prev.page + 1,
-        }));
-      })
-      .catch((error) => console.log(`error`, error))
-      .finally(() => {
-        this.setState({ isLoadingMore: false });
-        window.scrollTo({
-          top: document.documentElement.scrollHeight,
-          behavior: "smooth",
-        });
-      });
+  //При изменении параметра поиска перезаписываем его в state
+  // удаляем предыдущие картинки из images и номер страницы устанавливаем в 1
+  onSearchSubmit = (searchbar) => {
+    this.setState({ images: [], searchbar, page: 1 });
   };
+
+  //При нажатии на кнопку загрузить больше фото
+  // перезаписываем номер страницы в state
+  onLoadMore = () => {
+    this.setState((prev) => ({
+      page: prev.page + 1,
+    }));
+
+    // this.setState({ isLoadingMore: true });
+    // getImagesOnSearch(this.state.searchbar, this.state.page)
+    //   .then((images) => {
+    //     this.setState((prev) => ({
+    //       images: [...prev.images, ...images],
+    //       page: prev.page + 1,
+    //     }));
+    //   })
+    //   .catch((error) => console.log(`error`, error))
+    //   .finally(() => {
+    //     this.setState({ isLoadingMore: false });
+    //     window.scrollTo({
+    //       top: document.documentElement.scrollHeight,
+    //       behavior: "smooth",
+    //     });
+    //   });
+  };
+
+  processSearchRequest = (images) => {};
 
   render() {
     const { isLoading, isLoadingMore, modalImageURL } = this.state;
